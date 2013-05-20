@@ -1,0 +1,32 @@
+= javascript_include_tag "http://#{request.host}:#{endpoint.port}/stomp.js"
+
+%h1 Trivia Host
+
+%a.next-question Next Question!
+
+#question
+
+#responses
+
+:javascript
+  $(function() {
+    var client = new Stomp.Client();
+    client.connect( function() {
+      client.subscribe( '/game/responses', function(message) {
+        console.log( "response" );
+        var r = JSON.parse( message.body )
+        console.debug( r );
+      } );
+      client.subscribe( '/game/questions', function(message) {
+        console.log( "questions" );
+        var q = JSON.parse( message.body );
+        console.debug( q );
+        $( '#question' ).html( q.question );
+      }  );
+    } );
+
+    $( 'a.next-question' ).click( function() {
+      console.debug( "asking for next question" );
+      client.send( '/game/control', {}, JSON.stringify( { type: 'next-question' } ) );
+    } );
+  } );
