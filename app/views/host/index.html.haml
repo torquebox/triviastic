@@ -2,16 +2,16 @@
 
 %script{:id=>'roster-template', :type=>'text/x-handlebars-template'}
   .roster-entry{:id=>'roster-{{id}}', :player_id=>'{{id}}'}
-    .name {{name}}
     .score {{score}}
+    .name {{name}}
 
 %script{:id=>'response-template', :type=>'text/x-handlebars-template'}
   .response-entry{:id=>'response-{{id}}', :player_id=>'{{id}}'}
-    .name {{name}}
-    .response {{response}}
     .scoring
       %a.correct Correct
       %a.incorrect Incorrect
+    .name {{name}}
+    .response {{response}}
 
 %h1 Trivia Host
 
@@ -47,7 +47,8 @@
         var source   = $("#roster-template").html();
         var template = Handlebars.compile(source);
         var id = r.id;
-        $('#roster-' + id ).remove();
+        console.log( 'remove: ' + id );
+        $(document.getElementById( 'roster-' + id )).remove();
         $('#roster').append( template( r ) );
       } );
       client.subscribe( '/game/responses', function(message) {

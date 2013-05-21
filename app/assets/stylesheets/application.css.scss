@@ -17,4 +17,39 @@
 body {
   @extend .container;
   @extend .row;
+
+  a, input[type='submit'] {
+    @extend .btn;
+  }
+  a.correct {
+    @extend .btn-primary;
+  }
+
+  .roster-entry {
+    .score {
+      @extend .pull-right;
+      width: 2em;
+      font-weight: bold;
+    }
+  }
+  .response-entry {
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 1em;
+    padding-bottom: 1em;
+    .name {
+      font-weight: bold;
+    }
+    .response {
+    }
+    .scoring {
+      @extend .pull-right;
+    }
+  }
+
+  #player-login, #player-play {
+    label {
+      font-weight: bold;
+    }
+    text-align: center;
+  }
 }

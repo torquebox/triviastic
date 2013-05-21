@@ -1,0 +1,8 @@
+- question: 'How tall is Bob?'
+  answer:   '6''5"'
+- question: 'What''s the Ruby app-server from JBoss called?'
+  answer:   'TorqueBox'
+- question: 'What town is Bob from?'
+  answer:   'Wytheville, VA'
+- question: 'Name 3 of the 6 Belgian trappist beer breweries'
+  answer:   'Chimay, d''Orval, Rochefort, Westmalle, Westvleteren, Achel'

@@ -1,32 +1,31 @@
 
 require 'torquebox-stomp'
 require 'json'
+require 'yaml'
 
 class Control < TorqueBox::Stomp::JmsStomplet
  
   def configure(opts={})
     super
-    @hosts = []
+    @host = nil
+    @questions = YAML.load( File.read( File.join( ENV['RAILS_ROOT'], 'db/questions.yml' ) ) )
     @control = TorqueBox.fetch( '/topics/questions' )
   end
 
   def on_subscribe(subscriber)
-    @hosts << subscriber
+    @host = subscriber
   end
 
   def on_message(message, session)
     puts "#{self} message => #{message.inspect}"
     q = next_question()
-    @hosts.each do |h|
-      puts "sending to host #{h}"
-      h.send( TorqueBox::Stomp::Message.new( JSON.unparse( q ) ) )
-    end
+    @host.send( TorqueBox::Stomp::Message.new( JSON.unparse( q ) ) )
     q.delete( :answer )
     send_to( @control, q, {}, :encoding=>:json )
   end
 
   def next_question() 
-    { :question=>'What is the thing?', :answer=>'a cat' }
+    @questions.shift
   end
 
 end

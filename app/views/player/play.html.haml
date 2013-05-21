@@ -1,14 +1,15 @@
 = javascript_include_tag "http://#{request.host}:#{endpoint.port}/stomp.js"
 
-%h1 #{session[:name]}
- 
-#question
+#player-play
+  %h1 #{session[:name]}
+   
+  %form#response-form
+    %input#answer{:type=>:text}
+    .go
+      %input{:type=>:submit}
 
-#response
-
-%form#response-form
-  %input#answer{:type=>:text}
-  %input{:type=>:submit}
+  #question
+  
 
 :javascript
   $(function() {
