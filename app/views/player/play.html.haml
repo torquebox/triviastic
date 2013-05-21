@@ -1,0 +1,30 @@
+= javascript_include_tag "http://#{request.host}:#{endpoint.port}/stomp.js"
+
+%h1 #{session[:name]}
+ 
+#question
+
+#response
+
+%form#response-form
+  %input#answer{:type=>:text}
+  %input{:type=>:submit}
+
+:javascript
+  $(function() {
+    var client = new Stomp.Client();
+    client.connect( function() {
+      client.subscribe( '/game/questions', function(message) {
+        console.log( "questions" );
+        q = JSON.parse( message.body );
+        console.debug( q );
+        $( '#question' ).html( q.question );
+      }  );
+    } );
+    $( '#response-form' ).submit( function() {
+      console.log( "sending answer" );
+      client.send( '/game/responses', {}, JSON.stringify( { answer: $('#answer').val() } ) );
+      $('#answer').val('');
+      return false;
+    } );
+  } );

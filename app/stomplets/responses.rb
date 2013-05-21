@@ -5,7 +5,7 @@ class Responses < TorqueBox::Stomp::JmsStomplet
  
   def configure(opts={})
     super
-    @responses = TorqueBox.fetch( '/queues/responses' )
+    @responses = TorqueBox.fetch( '/topics/responses' )
   end
 
   def on_subscribe(subscriber)
@@ -13,6 +13,9 @@ class Responses < TorqueBox::Stomp::JmsStomplet
   end
 
   def on_message(message, session)
+    puts "got a message, sneding it on"
+    message.headers['name'] = session[:name]
+    message.headers['id'] = session.id
     send_to( @responses, message )
   end
 

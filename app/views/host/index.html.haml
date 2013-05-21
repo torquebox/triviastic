@@ -1,32 +1,96 @@
 = javascript_include_tag "http://#{request.host}:#{endpoint.port}/stomp.js"
 
+%script{:id=>'roster-template', :type=>'text/x-handlebars-template'}
+  .roster-entry{:id=>'roster-{{id}}', :player_id=>'{{id}}'}
+    .name {{name}}
+    .score {{score}}
+
+%script{:id=>'response-template', :type=>'text/x-handlebars-template'}
+  .response-entry{:id=>'response-{{id}}', :player_id=>'{{id}}'}
+    .name {{name}}
+    .response {{response}}
+    .scoring
+      %a.correct Correct
+      %a.incorrect Incorrect
+
 %h1 Trivia Host
 
-%a.next-question Next Question!
+.row
+  .span12
+    %a.next-question Next Question!
+    %a.reveal-answers Reveal Answers
 
-#question
+.row
+  .span8
+    %h2 Question
+    #question
 
-#responses
+    %h2 Answer
+    #answer
+
+  .span4
+    %h2 Roster
+    #roster
+.row
+  .span12
+    %h2 Responses
+    #responses
 
 :javascript
   $(function() {
     var client = new Stomp.Client();
     client.connect( function() {
-      client.subscribe( '/game/responses', function(message) {
-        console.log( "response" );
-        var r = JSON.parse( message.body )
+      client.subscribe( '/game/roster', function(message) {
+        var r = JSON.parse( message.body );
+        console.debug( "new roster" );
         console.debug( r );
+        var source   = $("#roster-template").html();
+        var template = Handlebars.compile(source);
+        var id = r.id;
+        $('#roster-' + id ).remove();
+        $('#roster').append( template( r ) );
       } );
-      client.subscribe( '/game/questions', function(message) {
+      client.subscribe( '/game/responses', function(message) {
+        console.debug( message );
+        var name = message.headers.name;
+        var id   = message.headers.id;
+        var r = JSON.parse( message.body );
+        var a = r.answer;
+        var source   = $("#response-template").html();
+        var template = Handlebars.compile(source);
+        $('#response-' + id ).remove();
+        $('#responses').append( template( { id: id, name: name, response: a } ) );
+      } );
+      client.subscribe( '/game/control', function(message) {
         console.log( "questions" );
         var q = JSON.parse( message.body );
         console.debug( q );
         $( '#question' ).html( q.question );
+        $( '#answer' ).hide();
+        $( '#answer' ).html( q.answer );
       }  );
     } );
 
     $( 'a.next-question' ).click( function() {
-      console.debug( "asking for next question" );
+      $('#responses').html('');
+      $('#responses').hide();
+      $('#answer').hide();
       client.send( '/game/control', {}, JSON.stringify( { type: 'next-question' } ) );
+      console.log( "sent" );
+    } );
+    $( 'a.reveal-answers' ).click( function() {
+      $( '#answer' ).show();
+      $( '#responses' ).show();
+    } );
+
+    $(document).on( 'click', 'a.correct', function(e) {
+      var entry = $(this).closest('.response-entry');
+      var id = entry.attr( 'player_id' );
+      entry.remove();
+      client.send( '/game/scorekeeper', { id: id }, '' )
+    } );
+    $(document).on( 'click', 'a.incorrect', function(e) {
+      var entry = $(this).closest('.response-entry');
+      entry.remove();
     } );
   } );

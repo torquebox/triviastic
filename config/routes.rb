@@ -1,6 +1,8 @@
 Triviastic::Application.routes.draw do
   match '/'=>'player#index'
+  match '/play'=>'player#play', :as=>:play
   match '/host'=>'host#index'
+ 
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
