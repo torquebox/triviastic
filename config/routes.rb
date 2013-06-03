@@ -1,7 +1,9 @@
 Triviastic::Application.routes.draw do
+
   match '/'=>'player#index'
   match '/play'=>'player#play', :as=>:play
-  match '/host'=>'host#index'
+  match '/login'=>'host#index', :as=>:host_login
+  match '/host'=>'host#host',   :as=>:host
  
 
   # The priority is based upon order of creation:
