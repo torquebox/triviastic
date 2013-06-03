@@ -69,6 +69,9 @@
         $( '#question' ).html( q.question );
         $( '#answer' ).hide();
         $( '#answer' ).html( q.answer );
+        if ( q.last ) {
+          $( '.next-question' ).remove();
+        }
       }  );
     } );
 
@@ -80,6 +83,7 @@
       console.log( "sent" );
     } );
     $( 'a.reveal-answers' ).click( function() {
+      client.send( '/game/control', {}, JSON.stringify( { type: 'lock-question', answer: $('#answer').html() } ) );
       $( '#answer' ).show();
       $( '#responses' ).show();
     } );

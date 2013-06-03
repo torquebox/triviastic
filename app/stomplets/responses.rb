@@ -13,9 +13,9 @@ class Responses < TorqueBox::Stomp::JmsStomplet
   end
 
   def on_message(message, session)
-    puts "got a message, sneding it on"
     message.headers['name'] = session[:name]
     message.headers['id'] = session.id
+    puts "got a message, sneding it on: #{message.inspect}"
     send_to( @responses, message )
   end
 

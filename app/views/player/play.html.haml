@@ -2,13 +2,15 @@
 
 #player-play
   %h1 #{session[:name]}
+
+  #question
    
   %form#response-form
     %input#answer{:type=>:text}
     .go
       %input{:type=>:submit}
 
-  #question
+  #correct-answer
   
 
 :javascript
@@ -19,7 +21,15 @@
         console.log( "questions" );
         q = JSON.parse( message.body );
         console.debug( q );
-        $( '#question' ).html( q.question );
+        if ( q.type == 'lock-question' ) {
+          console.log( "lock question" );
+          $('form').hide();
+          $('#correct-answer').html( q.answer );
+        } else {
+          $('form').show();
+          $( '#question' ).html( q.question );
+          $('#correct-answer').html('');
+        }
       }  );
     } );
     $( '#response-form' ).submit( function() {
