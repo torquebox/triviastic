@@ -6,3 +6,7 @@
   answer:   'Wytheville, VA'
 - question: 'Name 3 of the 6 Belgian trappist beer breweries'
   answer:   'Chimay, d''Orval, Rochefort, Westmalle, Westvleteren, Achel'
+- question: 'What''s Nissan''s upscale auto brand?'
+  answer:   'Infiniti'
+- question: 'What did the community version of JBossAS get renamed to?'
+  answer:   'WildFly'
