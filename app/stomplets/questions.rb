@@ -9,7 +9,6 @@ class Questions < TorqueBox::Stomp::JmsStomplet
   end
 
   def on_subscribe(subscriber)
-    puts "subcribe to /questions #{subscriber}"
     subscribe_to( subscriber, @questions, nil, :encoding=>:json )    
   end
 
