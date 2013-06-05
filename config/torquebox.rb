@@ -27,7 +27,5 @@ TorqueBox.configure do
 
   topic '/topics/roster'
   topic '/topics/questions'
-  topic '/topics/responses'
-  #topic '/topics/scorekeeper'
 
 end
